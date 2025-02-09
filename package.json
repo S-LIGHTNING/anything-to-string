@@ -1,6 +1,6 @@
 {
   "name": "@slightning/anything-to-string",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Converts anything to a string.",
   "keywords": [
     "string"
@@ -15,7 +15,8 @@
   },
   "license": "Apache-2.0",
   "author": "SLIGHTNING",
-  "main": "dist/src/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist",
@@ -24,7 +25,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --outDir dist/esm && tsc --outDir dist/cjs --module commonjs --moduleResolution node",
     "test": "tsc -p test.tsconfig.json && jest --verbose ./out"
   },
   "devDependencies": {
