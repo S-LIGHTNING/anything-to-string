@@ -90,10 +90,6 @@ Output
     number: [number: 1]
     boolean: [boolean: true]
     String: String("test") String {
-        0: "t"
-        1: "e"
-        2: "s"
-        3: "t"
         length: 4
     }
     Number: Number(1) {}
