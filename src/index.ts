@@ -4,6 +4,7 @@ import { AnythingRule } from "./rules/anything"
 
 export * from "./utils"
 export * from "./config"
+export * from "./rules/anything"
 export * from "./rules/null"
 export * from "./rules/undefined"
 export * from "./rules/basic-string"
@@ -19,7 +20,7 @@ export * from "./rules/set"
 export * from "./rules/map"
 export * from "./rules/weak-ref"
 export * from "./rules/error"
-export * from "./rules/HTMLElement"
+export * from "./rules/html-element"
 export * from "./rules/array"
 export * from "./rules/object"
 export * from "./rules/function"
@@ -31,11 +32,11 @@ export function stringify(
 ): string {
     const requiredConfig: RequiredConfig = Object.assign({
         rules(
-            this: PrepareContext | ToStringContext,
             __data: unknown,
-            __config: RequiredConfig
+            __config: RequiredConfig,
+            context: PrepareContext | ToStringContext
         ): Rule<unknown>[] {
-            const depth: number = "pathArray" in this ? this.pathArray.length : this.depth
+            const depth: number = "pathArray" in context ? context.pathArray.length : context.depth
             switch (depth) {
                 case 1:
                     return Rules.MAXIMUM
@@ -55,16 +56,16 @@ export function stringify(
     const prepareData = {
         refMap: new Map<unknown, number>()
     }
-    new AnythingRule().prepare.call({
+    new AnythingRule().prepare(data, requiredConfig, {
         pathArray: [],
         accessedSet: new Set(),
         prepareData
-    }, data, requiredConfig)
-    return new AnythingRule().toString.call({
+    })
+    return new AnythingRule().toString(data, requiredConfig, {
         depth: 0,
         accessedRefSet: new Set<unknown>(),
         prepareData
-    }, data, requiredConfig)
+    })
 }
 
 export default stringify

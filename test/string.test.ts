@@ -12,10 +12,6 @@ describe("String to string", (): void => {
     })
     test("rules: Rules.MAJOR", (): void => {
         expect(stringify(data, { rules: Rules.MAJOR })).toBe(`String(\"test\") String {
-    0: [string: \"t\"]
-    1: [string: \"e\"]
-    2: [string: \"s\"]
-    3: [string: \"t\"]
     length: [number: 4]
 }`)
     })

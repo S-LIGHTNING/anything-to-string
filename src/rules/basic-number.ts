@@ -5,147 +5,69 @@ function isBasicNumber(data: unknown): data is number {
     return typeof data == "number"
 }
 
-export class MinimumBasicNumberRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    number,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MinimumBasicNumberRule implements Rule<number> {
 
     public test: typeof isBasicNumber = isBasicNumber
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: number,
-        __config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        __config: RequiredConfig,
+        __context: ToStringContext
     ): string {
         return String(data)
     }
 }
 
-export class LesserBasicNumberRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    number,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class LesserBasicNumberRule implements Rule<number> {
 
     public test: typeof isBasicNumber = isBasicNumber
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: number,
-        __config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        __config: RequiredConfig,
+        __context: ToStringContext
     ): string {
         return String(data)
     }
 }
 
-export class MajorBasicNumberRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    number,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MajorBasicNumberRule implements Rule<number> {
 
     public test: typeof isBasicNumber = isBasicNumber
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: number,
-        __config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        __config: RequiredConfig,
+        __context: ToStringContext
     ): string {
         return `[number: ${String(data)}]`
     }
 }
 
-export class MaximumBasicNumberRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    number,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MaximumBasicNumberRule implements Rule<number> {
 
     public test: typeof isBasicNumber = isBasicNumber
 
     public prepare(
-        this: PrepareContext<CUSTOM_PREPARE_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: number,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: PrepareContext
     ): void {
-        new MaximumObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().prepare.call(
-            this, data as unknown as Record<PropertyKey, unknown>, config
-        )
+        new MaximumObjectRule().prepare(data, config, context)
     }
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: number,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: ToStringContext
     ): string {
         return `[number: ${String(data)}] ${
-            new MaximumObjectRule<
-                CUSTOM_CONFIG_TYPE,
-                CUSTOM_PREPARE_DATA_TYPE,
-                CUSTOM_PREPARE_CONTEXT_TYPE,
-                CUSTOM_TO_STRING_CONTEXT_TYPE
-            >().toString.call(
-                this, data as unknown as Record<PropertyKey, unknown>, config
-            )
+            new MaximumObjectRule().toString(data, config, context)
         }`
     }
 }

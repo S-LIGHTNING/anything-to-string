@@ -5,147 +5,67 @@ function isBasicBoolean(data: unknown): data is boolean {
     return typeof data == "boolean"
 }
 
-export class MinimumBasicBooleanRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    boolean,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MinimumBasicBooleanRule implements Rule<boolean> {
 
     public test: typeof isBasicBoolean = isBasicBoolean
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: boolean,
-        __config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        __config: RequiredConfig,
+        __context: ToStringContext
     ): string {
         return String(data)
     }
 }
 
-export class LesserBasicBooleanRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    boolean,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class LesserBasicBooleanRule implements Rule<boolean> {
 
     public test: typeof isBasicBoolean = isBasicBoolean
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: boolean,
-        __config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        __config: RequiredConfig,
+        __context: ToStringContext
     ): string {
         return String(data)
     }
 }
 
-export class MajorBasicBooleanRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    boolean,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MajorBasicBooleanRule implements Rule<boolean> {
 
     public test: typeof isBasicBoolean = isBasicBoolean
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: boolean,
-        __config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        __config: RequiredConfig
     ): string {
         return `[boolean: ${String(data)}]`
     }
 }
-
-export class MaximumBasicBooleanRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    boolean,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MaximumBasicBooleanRule implements Rule<boolean> {
 
     public test: typeof isBasicBoolean = isBasicBoolean
 
     public prepare(
-        this: PrepareContext<CUSTOM_PREPARE_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: boolean,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: PrepareContext
     ): void {
-        new MaximumObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().prepare.call(
-            this, data as unknown as Record<PropertyKey, unknown>, config
-        )
+        new MaximumObjectRule().prepare(data, config, context)
     }
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: boolean,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: ToStringContext
     ): string {
         return `[boolean: ${String(data)}] ${
-            new MaximumObjectRule<
-                CUSTOM_CONFIG_TYPE,
-                CUSTOM_PREPARE_DATA_TYPE,
-                CUSTOM_PREPARE_CONTEXT_TYPE,
-                CUSTOM_TO_STRING_CONTEXT_TYPE
-            >().toString.call(
-                this, data as unknown as Record<PropertyKey, unknown>, config
-            )
+            new MaximumObjectRule().toString(data, config, context)
         }`
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@slightning/anything-to-string",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Converts anything to a string.",
   "keywords": [
     "string"
@@ -18,6 +18,11 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
+  "exports": {
+    "import": "./dist/esm/index.js",
+    "require": "./dist/cjs/index.js",
+    "types": "./dist/types/index.d.ts"
+  },
   "files": [
     "dist",
     "LICENSE",

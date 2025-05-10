@@ -5,147 +5,69 @@ function isBigInt(data: unknown): data is bigint {
     return typeof data == "bigint"
 }
 
-export class MinimumBigIntRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    bigint,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MinimumBigIntRule implements Rule<bigint> {
 
     public test: typeof isBigInt = isBigInt
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: bigint,
-        __config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        __config: RequiredConfig,
+        __context: ToStringContext
     ): string {
         return String(data)
     }
 }
 
-export class LesserBigIntRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    bigint,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class LesserBigIntRule implements Rule<bigint> {
 
     public test: typeof isBigInt = isBigInt
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: bigint,
-        __config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        __config: RequiredConfig,
+        __context: ToStringContext
     ): string {
         return String(data)
     }
 }
 
-export class MajorBigIntRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    bigint,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MajorBigIntRule implements Rule<bigint> {
 
     public test: typeof isBigInt = isBigInt
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: bigint,
-        __config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        __config: RequiredConfig,
+        __context: ToStringContext
     ): string {
         return `[bigint: ${String(data)}]`
     }
 }
 
-export class MaximumBigIntRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    bigint,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MaximumBigIntRule implements Rule<bigint> {
 
     public test: typeof isBigInt = isBigInt
 
     public prepare(
-        this: PrepareContext<CUSTOM_PREPARE_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: bigint,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: PrepareContext
     ): void {
-        new MaximumObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().prepare.call(
-            this, data as unknown as Record<PropertyKey, unknown>, config
-        )
+        new MaximumObjectRule().prepare(data, config, context)
     }
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: bigint,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: ToStringContext
     ): string {
         return `[bigint: ${String(data)}] ${
-            new MaximumObjectRule<
-                CUSTOM_CONFIG_TYPE,
-                CUSTOM_PREPARE_DATA_TYPE,
-                CUSTOM_PREPARE_CONTEXT_TYPE,
-                CUSTOM_TO_STRING_CONTEXT_TYPE
-            >().toString.call(
-                this, data as unknown as Record<PropertyKey, unknown>, config
-            )
+            new MaximumObjectRule().toString(data, config, context)
         }`
     }
 }

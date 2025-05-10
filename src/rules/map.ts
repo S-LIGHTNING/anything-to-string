@@ -7,114 +7,51 @@ function isMap(data: unknown): data is Map<unknown, unknown> {
     return typeof Map != "undefined" && data instanceof Map
 }
 
-export class MinimumMapRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    Map<unknown, unknown>,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MinimumMapRule implements Rule<Map<unknown, unknown>> {
 
     public test: typeof isMap = isMap
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: Map<unknown, unknown>,
-        __config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        __config: RequiredConfig,
+        __context: ToStringContext
     ): string {
         return `Map(${data.size})`
     }
 }
 
-export class LesserMapRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    Map<unknown, unknown>,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class LesserMapRule implements Rule<Map<unknown, unknown>> {
 
     public test: typeof isMap = isMap
 
     public prepare(
-        this: PrepareContext<CUSTOM_PREPARE_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: Map<unknown, unknown>,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: PrepareContext
     ): void {
-        new LesserObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().prepare.call(
-            this, data as unknown as Record<PropertyKey, unknown>, config
-        )
+        new LesserObjectRule().prepare(data, config, context)
+        for (const key of data.keys()) {
+            new AnythingRule().prepare(key, config, context)
+        }
         for (const value of data.values()) {
-            new AnythingRule<
-                CUSTOM_CONFIG_TYPE,
-                CUSTOM_PREPARE_DATA_TYPE,
-                CUSTOM_PREPARE_CONTEXT_TYPE,
-                CUSTOM_TO_STRING_CONTEXT_TYPE
-            >().prepare.call(
-                this, value, config
-            )
+            new AnythingRule().prepare(value, config, context)
         }
     }
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: Map<unknown, unknown>,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: ToStringContext
     ): string {
-        return new LesserObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().toString.call(
-            this,
-            data as unknown as Record<PropertyKey, unknown>,
-            config,
-            {
+        return new LesserObjectRule({
+            specialValue: {
                 "[[Entries]]": data.size == 0 ? "None" : Array.from(data.entries().map(
                     ([key, value]: [unknown, unknown]): string => {
-                        return `${new AnythingRule<
-                                CUSTOM_CONFIG_TYPE,
-                                CUSTOM_PREPARE_DATA_TYPE,
-                                CUSTOM_PREPARE_CONTEXT_TYPE,
-                                CUSTOM_TO_STRING_CONTEXT_TYPE
-                            >().toString.call(this, key, config)
-                            }: ${new AnythingRule<
-                                CUSTOM_CONFIG_TYPE,
-                                CUSTOM_PREPARE_DATA_TYPE,
-                                CUSTOM_PREPARE_CONTEXT_TYPE,
-                                CUSTOM_TO_STRING_CONTEXT_TYPE
-                            >().toString.call(this, value, config)}`
+                        return `${new AnythingRule().toString(key, config, context)
+                            }: ${new AnythingRule().toString(value, config, context)}`
                             .split("\n")
                             .join(`\n${getIndentString(config)}`)
                     }
@@ -122,90 +59,42 @@ export class LesserMapRule<
                     `\n${getIndentString(config)}${line}`
                 )).join("")
             }
-        )
+        }).toString(data, config, context)
     }
 }
 
-export class MajorMapRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    Map<unknown, unknown>,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MajorMapRule implements Rule<Map<unknown, unknown>> {
 
     public test: typeof isMap = isMap
 
     public prepare(
-        this: PrepareContext<CUSTOM_PREPARE_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: Map<unknown, unknown>,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: PrepareContext
     ): void {
-        new MajorObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().prepare.call(
-            this, data as unknown as Record<PropertyKey, unknown>, config
-        )
+        new MajorObjectRule().prepare(data, config, context)
+        for (const key of data.keys()) {
+            new AnythingRule().prepare(key, config, context)
+        }
         for (const value of data.values()) {
-            new AnythingRule<
-                CUSTOM_CONFIG_TYPE,
-                CUSTOM_PREPARE_DATA_TYPE,
-                CUSTOM_PREPARE_CONTEXT_TYPE,
-                CUSTOM_TO_STRING_CONTEXT_TYPE
-            >().prepare.call(
-                this, value, config
-            )
+            new AnythingRule().prepare(value, config, context)
         }
     }
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: Map<unknown, unknown>,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: ToStringContext
     ): string {
-        return new MajorObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().toString.call(
-            this,
-            data as unknown as Record<PropertyKey, unknown>,
-            config,
-            {
+        return new MajorObjectRule({
+            specialValue: {
                 "[[Entries]]": data.size == 0 ? "None" : Array.from(data.entries().map(
                     ([key, value]: [unknown, unknown]): string => {
                         return `${
-                            "\n"}key: ${new AnythingRule<
-                                CUSTOM_CONFIG_TYPE,
-                                CUSTOM_PREPARE_DATA_TYPE,
-                                CUSTOM_PREPARE_CONTEXT_TYPE,
-                                CUSTOM_TO_STRING_CONTEXT_TYPE
-                            >().toString.call(this, key, config)}${
-                            "\n"}value: ${new AnythingRule<
-                                CUSTOM_CONFIG_TYPE,
-                                CUSTOM_PREPARE_DATA_TYPE,
-                                CUSTOM_PREPARE_CONTEXT_TYPE,
-                                CUSTOM_TO_STRING_CONTEXT_TYPE
-                            >().toString.call(this, value, config)}`
+                            "\n"}key: ${new AnythingRule().toString(key, config, context)}${
+                            "\n"}value: ${new AnythingRule().toString(value, config, context)}`
                             .split("\n")
                             .join(`\n${getIndentString(config).repeat(2)}`)
                     }
@@ -213,90 +102,42 @@ export class MajorMapRule<
                     `\n${getIndentString(config)}${index}: ${line}`
                 )).join("")
             }
-        )
+        }).toString(data, config, context)
     }
 }
 
-export class MaximumMapRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    Map<unknown, unknown>,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MaximumMapRule implements Rule<Map<unknown, unknown>> {
 
     public test: typeof isMap = isMap
 
     public prepare(
-        this: PrepareContext<CUSTOM_PREPARE_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: Map<unknown, unknown>,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: PrepareContext
     ): void {
-        new MaximumObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().prepare.call(
-            this, data as unknown as Record<PropertyKey, unknown>, config
-        )
+        new MaximumObjectRule().prepare(data, config, context)
+        for (const key of data.keys()) {
+            new AnythingRule().prepare(key, config, context)
+        }
         for (const value of data.values()) {
-            new AnythingRule<
-                CUSTOM_CONFIG_TYPE,
-                CUSTOM_PREPARE_DATA_TYPE,
-                CUSTOM_PREPARE_CONTEXT_TYPE,
-                CUSTOM_TO_STRING_CONTEXT_TYPE
-            >().prepare.call(
-                this, value, config
-            )
+            new AnythingRule().prepare(value, config, context)
         }
     }
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: Map<unknown, unknown>,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: ToStringContext
     ): string {
-        return new MaximumObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().toString.call(
-            this,
-            data as unknown as Record<PropertyKey, unknown>,
-            config,
-            {
+        return new MaximumObjectRule({
+            specialValue: {
                 "[[Entries]]": data.size == 0 ? "None" : Array.from(data.entries().map(
                     ([key, value]: [unknown, unknown]): string => {
                         return `${
-                            "\n"}key: ${new AnythingRule<
-                                CUSTOM_CONFIG_TYPE,
-                                CUSTOM_PREPARE_DATA_TYPE,
-                                CUSTOM_PREPARE_CONTEXT_TYPE,
-                                CUSTOM_TO_STRING_CONTEXT_TYPE
-                            >().toString.call(this, key, config)}${
-                            "\n"}value: ${new AnythingRule<
-                                CUSTOM_CONFIG_TYPE,
-                                CUSTOM_PREPARE_DATA_TYPE,
-                                CUSTOM_PREPARE_CONTEXT_TYPE,
-                                CUSTOM_TO_STRING_CONTEXT_TYPE
-                            >().toString.call(this, value, config)}`
+                            "\n"}key: ${new AnythingRule().toString(key, config, context)}${
+                            "\n"}value: ${new AnythingRule().toString(value, config, context)}`
                             .split("\n")
                             .join(`\n${getIndentString(config).repeat(2)}`)
                     }
@@ -304,6 +145,6 @@ export class MaximumMapRule<
                     `\n${getIndentString(config)}${index}: ${line}`
                 )).join("")
             }
-        )
+        }).toString(data, config, context)
     }
 }

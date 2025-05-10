@@ -9,7 +9,7 @@ describe("Array to string", (): void => {
         expect(stringify(data, { rules: Rules.MINIMUM })).toBe("Array(6)")
     })
     test("rules: Rules.LESSER", (): void => {
-        expect(stringify(data, { rules: Rules.LESSER })).toBe(`[
+        expect(stringify(data, { rules: Rules.LESSER })).toBe(`Array [
     None,
     null,
     undefined,

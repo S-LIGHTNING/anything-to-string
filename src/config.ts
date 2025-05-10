@@ -1,85 +1,41 @@
-export type PrepareData<CUSTOM_DATA_TYPE extends {} = {}> = {
+export interface PrepareData {
     refMap: Map<unknown, number>
-} & CUSTOM_DATA_TYPE
+}
 
-export type PrepareContext<
-    CUSTOM_CONTEXT_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {}
-> = {
+export interface PrepareContext {
     pathArray: unknown[]
     accessedSet: Set<unknown>
-    prepareData: PrepareData<CUSTOM_PREPARE_DATA_TYPE>
-} & Partial<CUSTOM_CONTEXT_TYPE>
+    prepareData: PrepareData
+}
 
-export type ToStringContext<
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {}
-> = {
+export interface ToStringContext {
     depth: number
     accessedRefSet: Set<unknown>
-    prepareData: PrepareData<CUSTOM_PREPARE_DATA_TYPE>
-} & CUSTOM_TO_STRING_CONTEXT_TYPE
+    prepareData: PrepareData
+}
 
-export interface Rule<
-    DATA_TYPE,
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> {
+export interface Rule<DATA_TYPE> {
     test(data: unknown): data is DATA_TYPE
     prepare?(
-        this: PrepareContext<CUSTOM_PREPARE_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: DATA_TYPE,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: PrepareContext
     ): void
     toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: DATA_TYPE,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: ToStringContext
     ): string
 }
 
-export type BasicConfig<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> = {
-    rules?: Rule<
-        unknown,
-        CUSTOM_CONFIG_TYPE,
-        CUSTOM_PREPARE_DATA_TYPE,
-        CUSTOM_PREPARE_CONTEXT_TYPE,
-        CUSTOM_TO_STRING_CONTEXT_TYPE
-    >[] | ((
-        this:
-            PrepareContext<CUSTOM_PREPARE_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE> |
-            ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+export interface BasicConfig {
+    rules?: Rule<unknown>[] | ((
         data: unknown,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
-    ) => Rule<
-        unknown,
-        CUSTOM_CONFIG_TYPE,
-        CUSTOM_PREPARE_DATA_TYPE,
-        CUSTOM_PREPARE_CONTEXT_TYPE,
-        CUSTOM_TO_STRING_CONTEXT_TYPE
-    >[])
+        config: RequiredConfig,
+        context: PrepareContext | ToStringContext
+    ) => Rule<unknown>[])
     indent?: number | string
     depth?: number
     ref?: boolean
@@ -90,31 +46,10 @@ export type BasicConfig<
         getter?: boolean
         setter?: boolean
         prototype?: boolean
+        exclude?: PropertyKey[] | Set<PropertyKey> | ((key: PropertyKey) => boolean)
     }
 }
 
-export type Config<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> =
-    BasicConfig<
-        CUSTOM_CONFIG_TYPE,
-        CUSTOM_PREPARE_DATA_TYPE,
-        CUSTOM_PREPARE_CONTEXT_TYPE,
-        CUSTOM_TO_STRING_CONTEXT_TYPE
-    > & CUSTOM_CONFIG_TYPE
+export interface Config extends BasicConfig {}
 
-export type RequiredConfig<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> =
-    Required<BasicConfig<
-        CUSTOM_CONFIG_TYPE,
-        CUSTOM_PREPARE_DATA_TYPE,
-        CUSTOM_PREPARE_CONTEXT_TYPE,
-        CUSTOM_TO_STRING_CONTEXT_TYPE
-    >> & CUSTOM_CONFIG_TYPE
+export type RequiredConfig = Required<BasicConfig> & Config

@@ -14,7 +14,7 @@ import { MinimumSetRule, LesserSetRule, MajorSetRule, MaximumSetRule } from "./s
 import { MinimumMapRule, LesserMapRule, MajorMapRule, MaximumMapRule } from "./map"
 import { MinimumWeakRefRule, LesserWeakRefRule, MajorWeakRefRule, MaximumWeakRefRule } from "./weak-ref"
 import { MinimumErrorRule, LesserErrorRule, MajorErrorRule, MaximumErrorRule } from "./error"
-import { LesserHTMLElementRule, MajorHTMLElementRule, MaximumHTMLElementRule, MinimumHTMLElementRule } from "./HTMLElement"
+import { LesserHTMLElementRule, MajorHTMLElementRule, MaximumHTMLElementRule, MinimumHTMLElementRule } from "./html-element"
 import { MinimumArrayRule, LesserArrayRule, MajorArrayRule, MaximumArrayRule } from "./array"
 import { LesserObjectRule, MajorObjectRule, MaximumObjectRule, MinimumObjectRule } from "./object"
 import { MinimumFunctionRule, LesserFunctionRule, MajorFunctionRule, MaximumFunctionRule } from "./function"

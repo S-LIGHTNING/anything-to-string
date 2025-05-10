@@ -6,268 +6,115 @@ function isWeakRef(data: unknown): data is WeakRef<WeakKey> {
     return typeof WeakRef != "undefined" && data instanceof WeakRef
 }
 
-export class MinimumWeakRefRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    WeakRef<WeakKey>,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MinimumWeakRefRule implements Rule<WeakRef<WeakKey>> {
 
     public test: typeof isWeakRef = isWeakRef
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         __data: WeakRef<WeakKey>,
-        __config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        __config: RequiredConfig,
+        __context: ToStringContext
     ): string {
         return "[WeakRef]"
     }
 }
 
-export class LesserWeakRefRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    WeakRef<WeakKey>,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class LesserWeakRefRule implements Rule<WeakRef<WeakKey>> {
 
     public test: typeof isWeakRef = isWeakRef
 
     public prepare(
-        this: PrepareContext<CUSTOM_PREPARE_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: WeakRef<WeakKey>,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: PrepareContext
     ): void {
-        new LesserObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().prepare.call(
-            this, data as unknown as Record<PropertyKey, unknown>, config
-        )
+        new LesserObjectRule().prepare(data, config, context)
         const value: WeakKey | undefined = data.deref()
         if (value != undefined) {
-            new AnythingRule<
-                CUSTOM_CONFIG_TYPE,
-                CUSTOM_PREPARE_DATA_TYPE,
-                CUSTOM_PREPARE_CONTEXT_TYPE,
-                CUSTOM_TO_STRING_CONTEXT_TYPE
-            >().prepare.call(
-                this, value, config
-            )
+            new AnythingRule().prepare(value, config, context)
         }
     }
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: WeakRef<WeakKey>,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: ToStringContext
     ): string {
         const value: WeakKey | undefined = data.deref()
-        return new LesserObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().toString.call(
-            this,
-            data as unknown as Record<PropertyKey, unknown>,
-            config,
-            {
+        return new LesserObjectRule({
+            specialValue: {
                 "[[WeakRefTarget]]": value == undefined ? "None" : `${
-                    new AnythingRule<
-                        CUSTOM_CONFIG_TYPE,
-                        CUSTOM_PREPARE_DATA_TYPE,
-                        CUSTOM_PREPARE_CONTEXT_TYPE,
-                        CUSTOM_TO_STRING_CONTEXT_TYPE
-                    >().toString.call(this, value, config)}`
+                    new AnythingRule().toString(value, config, context)}`
             }
-        )
+        }).toString(data, config, context)
     }
 }
 
-export class MajorWeakRefRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    WeakRef<WeakKey>,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MajorWeakRefRule implements Rule<WeakRef<WeakKey>> {
 
     public test: typeof isWeakRef = isWeakRef
 
     public prepare(
-        this: PrepareContext<CUSTOM_PREPARE_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: WeakRef<WeakKey>,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: PrepareContext
     ): void {
-        new MajorObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().prepare.call(
-            this, data as unknown as Record<PropertyKey, unknown>, config
-        )
+        new MajorObjectRule().prepare(data, config, context)
         const value: WeakKey | undefined = data.deref()
         if (value != undefined) {
-            new AnythingRule<
-                CUSTOM_CONFIG_TYPE,
-                CUSTOM_PREPARE_DATA_TYPE,
-                CUSTOM_PREPARE_CONTEXT_TYPE,
-                CUSTOM_TO_STRING_CONTEXT_TYPE
-            >().prepare.call(
-                this, value, config
-            )
+            new AnythingRule().prepare(value, config, context)
         }
     }
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: WeakRef<WeakKey>,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: ToStringContext
     ): string {
         const value: WeakKey | undefined = data.deref()
-        return new MajorObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().toString.call(
-            this,
-            data as unknown as Record<PropertyKey, unknown>,
-            config,
-            {
+        return new MajorObjectRule({
+            specialValue: {
                 "[[WeakRefTarget]]": value == undefined ? "None" : `${
-                    new AnythingRule<
-                        CUSTOM_CONFIG_TYPE,
-                        CUSTOM_PREPARE_DATA_TYPE,
-                        CUSTOM_PREPARE_CONTEXT_TYPE,
-                        CUSTOM_TO_STRING_CONTEXT_TYPE
-                    >().toString.call(this, value, config)}`
+                    new AnythingRule().toString(value, config, context)}`
             }
-        )
+        }).toString(data, config, context)
     }
 }
 
-export class MaximumWeakRefRule<
-    CUSTOM_CONFIG_TYPE extends {} = {},
-    CUSTOM_PREPARE_DATA_TYPE extends {} = {},
-    CUSTOM_PREPARE_CONTEXT_TYPE extends {} = {},
-    CUSTOM_TO_STRING_CONTEXT_TYPE extends {} = {}
-> implements Rule<
-    WeakRef<WeakKey>,
-    CUSTOM_CONFIG_TYPE,
-    CUSTOM_PREPARE_DATA_TYPE,
-    CUSTOM_PREPARE_CONTEXT_TYPE,
-    CUSTOM_TO_STRING_CONTEXT_TYPE
-> {
+export class MaximumWeakRefRule implements Rule<WeakRef<WeakKey>> {
 
     public test: typeof isWeakRef = isWeakRef
 
     public prepare(
-        this: PrepareContext<CUSTOM_PREPARE_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: WeakRef<WeakKey>,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: PrepareContext
     ): void {
-        new MaximumObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().prepare.call(
-            this, data as unknown as Record<PropertyKey, unknown>, config
-        )
+        new MaximumObjectRule().prepare(data, config, context)
         const value: WeakKey | undefined = data.deref()
         if (value != undefined) {
-            new AnythingRule<
-                CUSTOM_CONFIG_TYPE,
-                CUSTOM_PREPARE_DATA_TYPE,
-                CUSTOM_PREPARE_CONTEXT_TYPE,
-                CUSTOM_TO_STRING_CONTEXT_TYPE
-            >().prepare.call(
-                this, value, config
-            )
+            new AnythingRule().prepare(value, config, context)
         }
     }
 
     public toString(
-        this: ToStringContext<CUSTOM_TO_STRING_CONTEXT_TYPE, CUSTOM_PREPARE_DATA_TYPE>,
+        this: this,
         data: WeakRef<WeakKey>,
-        config: RequiredConfig<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >
+        config: RequiredConfig,
+        context: ToStringContext
     ): string {
         const value: WeakKey | undefined = data.deref()
-        return new MaximumObjectRule<
-            CUSTOM_CONFIG_TYPE,
-            CUSTOM_PREPARE_DATA_TYPE,
-            CUSTOM_PREPARE_CONTEXT_TYPE,
-            CUSTOM_TO_STRING_CONTEXT_TYPE
-        >().toString.call(
-            this,
-            data as unknown as Record<PropertyKey, unknown>,
-            config,
-            {
+        return new MaximumObjectRule({
+            specialValue: {
                 "[[WeakRefTarget]]": value == undefined ? "None" : `${
-                    new AnythingRule<
-                        CUSTOM_CONFIG_TYPE,
-                        CUSTOM_PREPARE_DATA_TYPE,
-                        CUSTOM_PREPARE_CONTEXT_TYPE,
-                        CUSTOM_TO_STRING_CONTEXT_TYPE
-                    >().toString.call(this, value, config)}`
+                    new AnythingRule().toString(value, config, context)}`
             }
-        )
+        }).toString(data, config, context)
     }
 }

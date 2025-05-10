@@ -16,7 +16,7 @@ describe("Map to string", (): void => {
         null: undefined
         Object {
             a: \"test\"
-        }: [
+        }: Array [
             1,
             true
         ]

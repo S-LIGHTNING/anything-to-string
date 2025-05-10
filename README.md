@@ -1,33 +1,25 @@
 # Anything To String
 
-Converts anything in JavaScript to a string.
+![npm version](https://img.shields.io/npm/v/@slightning/anything-to-string) ![license](https://img.shields.io/npm/l/@slightning/anything-to-string)
 
-Supports
+Converts anything in JavaScript/TypeScript to a string with detailed formatting options.
 
-- null
-- undefined
-- string
-- number
-- boolean
-- String
-- Number
-- Boolean
-- RegExp
-- Symbol
-- BigInt
-- Set
-- Map
-- WeakRef
-- Error
-- HTMLElement
-- Array
-- Object
-- Function (includes arrow function and class)
+## Supported Types
 
-## Install
+- Primitives: `null`, `undefined`, `string`, `number`, `boolean`
+- Object Wrappers: `String`, `Number`, `Boolean`
+- Special Objects: `RegExp`, `Symbol`, `BigInt`
+- Collections: `Set`, `Map`, `WeakRef`
+- Errors: `Error` and all its subclasses
+- DOM: `HTMLElement`
+- Complex Types: `Array`, `Object`, `Function` (including arrow functions and classes)
 
-```
-$ npm install @slightning/anything-to-string --save
+## Installation
+
+```bash
+npm install @slightning/anything-to-string
+# or
+yarn add @slightning/anything-to-string
 ```
 
 ## Use
@@ -460,7 +452,7 @@ Object {
 
 The rule defines how to turn an object into a string. Default rules include Rules.MINIMUM, Rules.LESSER, Rules.MAJOR, Rules.MAXIMUM. Their names represent the level of detail in which information is retained.
 
-Example
+Example:
 
 ```JavaScript
 const { stringify, Rules } = require("@slightning/anything-to-string")
@@ -513,6 +505,51 @@ console.log(stringify("data", {
 }))
 // output: (nothing)
 ```
+
+tips:
+
+You may need to add a `.d.ts` file to your project to declare the custom config type.
+
+```typescript
+declare module "@slightning/anything-to-string" {
+    interface Config {
+        ignoreString?: boolean
+    }
+}
+```
+
+If you want to use existing rules in your custom rule, you can use `AnythingRule`.
+
+```JavaScript
+const { stringify, Rules, AnythingRule } = require("@slightning/anything-to-string")
+
+class Ref {
+    constructor(value) {
+        this.value = value
+    }
+}
+
+console.log(stringify("data", {
+    rules: [
+        new class {
+            test(data) {
+                return data instanceof Ref // Apply rule for Ref
+            },
+            // Ref may contain circular reference.
+            // To handle circular reference, you need to prepare the value first.
+            // Just call `prepare` method of `AnythingRule` to prepare the value.
+            prepare(data, config, context) {
+                new AnythingRule().prepare(data.value, config, context)
+            },
+            toString(data, config, context) {
+                return "Ref(" + new AnythingRule().toString(data.value, config, context) + ")"
+            }
+        }, ...Rules.LESSER
+    ]
+}))
+// output: Ref("data")
+```
+
 ### indent
 
 The number of indented Spaces or indented string. Default is 4.
@@ -525,7 +562,7 @@ console.log(stringify(["data"], {
     indent: 2
 }))
 // output:
-// [
+// Array [
 //   "data"
 // ]
 
@@ -534,7 +571,7 @@ console.log(stringify(["data"], {
     indent: "|--|"
 }))
 // output:
-// [
+// Array [
 // |--|"data"
 // ]
 ```
@@ -551,6 +588,7 @@ Maximum recursion depth.
 - `getter`: Include getter.
 - `setter`: Include setter.
 - `prototype`: Include prototype.
+- `exclude`: Exclude properties with the specified names or symbols.
 
 Example
 
