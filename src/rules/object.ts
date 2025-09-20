@@ -30,7 +30,7 @@ export class ObjectRule implements Rule<{}> {
     }
 
     public test(data: unknown): data is {} {
-        return typeof data == "object"
+        return data != null && typeof data == "object"
     }
 
     public prepare(
